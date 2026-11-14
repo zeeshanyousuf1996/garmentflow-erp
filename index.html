@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GarmentFlow ERP — Static Demo</title>
+<style>
+:root{
+  --bg:#f5f7fb;--surface:#fff;--ink:#172033;--muted:#7b8498;--line:#e8ecf3;
+  --primary:#5b5ce2;--primary-soft:#eeefff;--green:#16a37b;--green-soft:#e8f8f2;
+  --orange:#e99a2b;--orange-soft:#fff5e6;--red:#e35d6a;--red-soft:#fff0f1;
+  --nav:#151a2d;--nav-muted:#a9b0c4;--shadow:0 8px 28px rgba(22,32,51,.05);
+}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial}
+button,input,select{font:inherit}button{cursor:pointer}
+.app{display:flex;min-height:100vh}
+.sidebar{width:250px;background:var(--nav);color:#fff;padding:22px 14px;display:flex;flex-direction:column;flex-shrink:0}
+.brand{display:flex;align-items:center;gap:11px;padding:0 12px 26px;font-size:18px;font-weight:800;letter-spacing:-.4px}
+.logo{height:35px;width:35px;border-radius:11px;background:linear-gradient(135deg,#8586ff,#4d4ed2);display:grid;place-items:center;font-weight:900}
+.brand small{display:block;font-size:10px;color:#929bb4;font-weight:500;letter-spacing:1.4px;margin-top:2px}
+.nav-label{font-size:10px;letter-spacing:1.5px;color:#737d98;padding:13px 13px 7px;font-weight:800}
+.nav{display:flex;align-items:center;gap:12px;padding:11px 13px;margin:2px 0;border-radius:10px;color:var(--nav-muted);font-weight:550;transition:.15s}
+.nav:hover,.nav.active{background:#292f49;color:#fff}.nav.active{box-shadow:inset 3px 0 #8586ff}
+.nav .ico{width:19px;text-align:center;font-size:16px}
+.nav .count{margin-left:auto;font-size:10px;background:#3a4160;padding:3px 7px;border-radius:20px}
+.sidebar-bottom{margin-top:auto;padding:14px 12px 0;color:#8e97ae;font-size:12px}
+.plan{border:1px solid #343b56;border-radius:12px;padding:13px;margin-bottom:15px}.plan strong{display:block;color:white;margin-bottom:5px}.plan button{margin-top:10px;background:#373d60;color:#fff;border:0;padding:8px 10px;border-radius:8px;width:100%}
+.main{flex:1;min-width:0}
+.topbar{height:74px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:10}
+.breadcrumb{color:var(--muted);font-size:13px}.breadcrumb b{color:var(--ink)}
+.top-actions{display:flex;align-items:center;gap:15px}.search{position:relative}.search input{width:230px;border:1px solid var(--line);border-radius:9px;padding:10px 12px 10px 34px;background:#fafbfe;outline:none}.search span{position:absolute;left:12px;top:9px;color:#929bad}
+.icon-btn{border:1px solid var(--line);background:#fff;border-radius:9px;height:38px;width:38px;color:#687187;position:relative}.dot{position:absolute;width:7px;height:7px;background:#ed6c78;border:1px solid white;border-radius:50%;right:7px;top:7px}
+.profile{display:flex;align-items:center;gap:9px}.avatar{height:34px;width:34px;border-radius:50%;background:#e9eaff;color:#5557d9;display:grid;place-items:center;font-weight:800}.profile strong{display:block;font-size:12px}.profile small{color:var(--muted);font-size:11px}
+.content{padding:28px 30px 40px;max-width:1600px;margin:auto}
+.page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:23px}.eyebrow{color:var(--primary);font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase}
+h1{font-size:25px;letter-spacing:-.7px;margin:5px 0 6px}.subtitle{color:var(--muted);margin:0}
+.btn{border:1px solid var(--line);background:#fff;padding:10px 14px;border-radius:9px;font-weight:650;color:#4b556b;display:inline-flex;align-items:center;gap:8px}.btn.primary{background:var(--primary);border-color:var(--primary);color:#fff;box-shadow:0 4px 10px #5b5ce233}.btn.small{padding:7px 10px;font-size:12px}.actions{display:flex;gap:9px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-bottom:19px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.stat{padding:17px 18px}.stat-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12px;font-weight:650}.stat-icon{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:16px}.si-purple{background:var(--primary-soft);color:var(--primary)}.si-green{background:var(--green-soft);color:var(--green)}.si-orange{background:var(--orange-soft);color:var(--orange)}.si-red{background:var(--red-soft);color:var(--red)}
+.stat-value{font-size:25px;font-weight:800;letter-spacing:-.7px;margin:12px 0 6px}.trend{font-size:11px;color:var(--green);font-weight:700}.trend span{color:var(--muted);font-weight:500;margin-left:4px}
+.grid-main{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,1fr);gap:18px;margin-bottom:18px}
+.card-head{padding:17px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}.card-head h3{margin:0;font-size:14px}.card-head p{margin:4px 0 0;color:var(--muted);font-size:11px}.card-body{padding:18px 20px}
+select,.filter-input{border:1px solid var(--line);background:#fff;padding:8px 10px;border-radius:8px;color:#596278;outline:none}
+.production-list{display:flex;flex-direction:column;gap:16px}.production-row{display:grid;grid-template-columns:112px 1fr 44px;align-items:center;gap:12px}.prod-name{font-weight:700;font-size:12px}.prod-sub{font-size:10px;color:var(--muted);margin-top:3px}.progress-wrap{height:8px;background:#f0f2f7;border-radius:99px;overflow:hidden}.progress{height:100%;border-radius:99px;background:var(--primary)}.progress.green{background:var(--green)}.progress.orange{background:var(--orange)}.progress.red{background:var(--red)}.percent{text-align:right;font-size:12px;font-weight:750}
+.legend{display:flex;gap:15px;margin-top:20px;color:var(--muted);font-size:11px}.legend i{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;background:var(--primary)}
+.alert-list{display:flex;flex-direction:column;gap:12px}.alert{display:flex;align-items:flex-start;gap:11px;padding:12px;background:#fbfcff;border:1px solid #f0f2f7;border-radius:10px}.alert-icon{width:31px;height:31px;border-radius:9px;display:grid;place-items:center;flex-shrink:0}.alert strong{font-size:12px;display:block}.alert p{font-size:11px;color:var(--muted);margin:3px 0 0}.alert .tag{margin-left:auto;white-space:nowrap}
+.tag{font-size:10px;padding:4px 7px;border-radius:6px;font-weight:750;display:inline-block}.tag.green{background:var(--green-soft);color:var(--green)}.tag.orange{background:var(--orange-soft);color:#b77717}.tag.red{background:var(--red-soft);color:var(--red)}.tag.purple{background:var(--primary-soft);color:var(--primary)}.tag.gray{background:#f0f2f6;color:#6e778a}
+.table-card{overflow:hidden}.table-tools{display:flex;gap:8px;align-items:center}.table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;white-space:nowrap}th{text-align:left;font-size:10px;letter-spacing:.5px;color:#929bad;background:#fafbfe;padding:12px 20px;font-weight:800;text-transform:uppercase;border-bottom:1px solid var(--line)}td{padding:14px 20px;border-bottom:1px solid #f0f2f7;font-size:12px;color:#5e687e}tbody tr:hover{background:#fcfcff}td strong{color:#222c40;font-weight:700}.product-cell{display:flex;align-items:center;gap:10px}.product-thumb{width:34px;height:34px;border-radius:8px;background:#f0efff;display:grid;place-items:center;font-size:17px}.sku{color:#a0a7b6;font-size:10px;margin-top:2px}.table-foot{padding:13px 20px;color:var(--muted);font-size:11px;display:flex;justify-content:space-between}
+.page{display:none}.page.active{display:block}
+.module-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-top:18px}.tile{padding:20px;display:flex;gap:14px;align-items:flex-start}.tile-icon{height:42px;width:42px;border-radius:12px;background:var(--primary-soft);color:var(--primary);display:grid;place-items:center;font-size:20px;flex-shrink:0}.tile h3{font-size:14px;margin:2px 0 5px}.tile p{color:var(--muted);font-size:12px;margin:0 0 10px}.tile a{color:var(--primary);font-size:12px;font-weight:700;text-decoration:none}
+.section-banner{padding:20px 22px;background:linear-gradient(110deg,#5b5ce2,#7778ef);border-radius:14px;color:#fff;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between}.section-banner h2{margin:0 0 5px;font-size:18px}.section-banner p{margin:0;color:#e4e5ff;font-size:12px}.section-banner .btn{background:#fff;color:var(--primary);border:0}
+.mini-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}.mini-stat{padding:17px}.mini-stat small{color:var(--muted);font-size:11px}.mini-stat strong{display:block;font-size:21px;margin-top:7px}
+.chart{height:190px;display:flex;align-items:end;gap:12px;padding:15px 5px 0;border-bottom:1px solid var(--line);background:repeating-linear-gradient(to top,transparent 0,transparent 43px,#f0f2f7 44px)}.bar-group{flex:1;display:flex;align-items:center;flex-direction:column;gap:7px;height:100%;justify-content:end}.bar{width:70%;max-width:32px;background:#d9dafe;border-radius:5px 5px 0 0;position:relative}.bar.active{background:var(--primary)}.bar-label{font-size:10px;color:#9aa2b3}
+.empty-note{padding:30px;text-align:center;color:var(--muted)}
+.footer-note{text-align:center;color:#a2a9b8;font-size:11px;margin-top:25px}
+.mobile-menu{display:none}
+.toast{position:fixed;bottom:22px;right:24px;background:#20263a;color:#fff;padding:12px 17px;border-radius:10px;box-shadow:var(--shadow);display:none;z-index:30}
+@media(max-width:1100px){.sidebar{width:215px}.stats{grid-template-columns:repeat(2,1fr)}.grid-main{grid-template-columns:1fr}.module-tiles{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){.sidebar{width:64px;padding:16px 8px}.brand{padding:0 6px 20px}.brand-text,.nav-label,.nav .nav-text,.nav .count,.sidebar-bottom{display:none}.nav{justify-content:center;padding:12px 0}.nav .ico{font-size:18px}.topbar{padding:0 15px}.search input{width:150px}.profile .profile-text{display:none}.content{padding:20px 14px}.page-head{flex-direction:column}.stats{gap:10px}.stat{padding:13px}.stat-value{font-size:21px}.module-tiles{grid-template-columns:1fr}.mini-stats{grid-template-columns:1fr}.production-row{grid-template-columns:90px 1fr 35px}.card-head{padding:14px}.card-body{padding:14px}.table-tools .filter-input{width:100px}}
+
+.modal-backdrop{position:fixed;inset:0;background:rgba(14,19,35,.48);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
+.modal-backdrop.open{display:flex}.modal{background:#fff;border-radius:16px;width:min(620px,100%);max-height:90vh;overflow:auto;box-shadow:0 25px 80px #10162935}
+.modal-head{padding:20px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.modal-head h2{font-size:18px;margin:0}.modal-close{border:0;background:#f2f4f8;border-radius:8px;width:32px;height:32px;font-size:18px}
+.modal-body{padding:22px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:11px;font-weight:750;color:#667087}.field input,.field select,.field textarea{width:100%;border:1px solid #e3e7ef;border-radius:9px;padding:10px 11px;outline:none;background:#fff;color:#20283b}.field input:focus,.field select:focus,.field textarea:focus{border-color:#7778ef;box-shadow:0 0 0 3px #7778ef18}.modal-foot{padding:15px 22px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:9px}.demo-label{background:#fff7e8;color:#a66b13;border:1px solid #ffe6bb;padding:8px 10px;border-radius:9px;font-size:11px;margin-bottom:15px}
+@media(max-width:520px){.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.modal-body{padding:16px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="logo">G</div><div class="brand-text">GarmentFlow<small>BUSINESS ERP</small></div></div>
+    <div class="nav-label">WORKSPACE</div>
+    <a class="nav active" href="#" data-page="dashboard"><span class="ico">▦</span><span class="nav-text">Dashboard</span></a>
+    <a class="nav" href="#" data-page="production"><span class="ico">⚙</span><span class="nav-text">Production</span><span class="count">4</span></a>
+    <a class="nav" href="#" data-page="inventory"><span class="ico">▤</span><span class="nav-text">Inventory</span></a>
+    <a class="nav" href="#" data-page="sales"><span class="ico">↗</span><span class="nav-text">Sales & Orders</span></a>
+    <a class="nav" href="#" data-page="purchases"><span class="ico">⇩</span><span class="nav-text">Purchases</span></a>
+    <div class="nav-label">PEOPLE & FINANCE</div>
+    <a class="nav" href="#" data-page="employees"><span class="ico">♙</span><span class="nav-text">Employees</span></a>
+    <a class="nav" href="#" data-page="payroll"><span class="ico">▣</span><span class="nav-text">Payroll</span></a>
+    <a class="nav" href="#" data-page="accounts"><span class="ico">◫</span><span class="nav-text">Accounts</span></a>
+    <div class="nav-label">MANAGEMENT</div>
+    <a class="nav" href="#" data-page="reports"><span class="ico">▥</span><span class="nav-text">Reports</span></a>
+    <a class="nav" href="#" data-page="settings"><span class="ico">⚙</span><span class="nav-text">Settings</span></a>
+    <div class="sidebar-bottom"><div class="plan"><strong>Demo Workspace</strong><span>Static UI preview</span><button onclick="notify('Demo workspace — no backend connected')">Workspace details</button></div>© 2026 GarmentFlow</div>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <div class="breadcrumb">Workspace&nbsp; / &nbsp;<b id="crumb">Dashboard</b></div>
+      <div class="top-actions">
+        <div class="search"><span>⌕</span><input id="globalSearch" placeholder="Search anything..." /></div>
+        <button class="icon-btn" onclick="notify('You are all caught up!')" aria-label="Notifications">♧<i class="dot"></i></button>
+        <div class="profile"><div class="avatar">ZY</div><div class="profile-text"><strong>Zeeshan Yousuf</strong><small>Business Owner</small></div><span style="color:#9aa2b3">⌄</span></div>
+      </div>
+    </header>
+    <div class="content">
+      <!-- DASHBOARD -->
+      <section class="page active" id="dashboard">
+        <div class="page-head"><div><div class="eyebrow">SATURDAY, 14 NOVEMBER 2026</div><h1>Good evening, Zeeshan 👋</h1><p class="subtitle">Here's what's happening across your garment business today.</p></div><div class="actions"><button class="btn" onclick="notify('Report export is a demo action')">⇧ Export report</button><button class="btn primary" onclick="notify('New production order form would open here')">＋ New production order</button></div></div>
+        <div class="stats">
+          <div class="card stat"><div class="stat-top">Production output <span class="stat-icon si-purple">⚙</span></div><div class="stat-value">8,420 <small style="font-size:12px;color:#8b94a7">pcs</small></div><div class="trend">↑ 12.8% <span>vs last week</span></div></div>
+          <div class="card stat"><div class="stat-top">Finished stock <span class="stat-icon si-green">▤</span></div><div class="stat-value">24,680 <small style="font-size:12px;color:#8b94a7">pcs</small></div><div class="trend">↑ 4.2% <span>vs last week</span></div></div>
+          <div class="card stat"><div class="stat-top">Sales this month <span class="stat-icon si-orange">↗</span></div><div class="stat-value">₨ 18.6M</div><div class="trend">↑ 8.4% <span>vs last month</span></div></div>
+          <div class="card stat"><div class="stat-top">Payroll pending <span class="stat-icon si-red">♙</span></div><div class="stat-value">₨ 426K</div><div class="trend" style="color:#e99a2b">23 employees <span>to be paid</span></div></div>
+        </div>
+        <div class="grid-main">
+          <div class="card"><div class="card-head"><div><h3>Production pipeline</h3><p>Department-wise progress • Order GF-26041</p></div><select><option>This week</option><option>This month</option></select></div><div class="card-body"><div class="production-list">
+            <div class="production-row"><div><div class="prod-name">Cutting</div><div class="prod-sub">10,000 / 10,000 pcs</div></div><div class="progress-wrap"><div class="progress green" style="width:100%"></div></div><div class="percent">100%</div></div>
+            <div class="production-row"><div><div class="prod-name">Stitching</div><div class="prod-sub">8,500 / 10,000 pcs</div></div><div class="progress-wrap"><div class="progress" style="width:85%"></div></div><div class="percent">85%</div></div>
+            <div class="production-row"><div><div class="prod-name">Pressing</div><div class="prod-sub">7,000 / 10,000 pcs</div></div><div class="progress-wrap"><div class="progress orange" style="width:70%"></div></div><div class="percent">70%</div></div>
+            <div class="production-row"><div><div class="prod-name">Quality check</div><div class="prod-sub">6,200 / 10,000 pcs</div></div><div class="progress-wrap"><div class="progress" style="width:62%;background:#7f83ed"></div></div><div class="percent">62%</div></div>
+            <div class="production-row"><div><div class="prod-name">Packing</div><div class="prod-sub">5,000 / 10,000 pcs</div></div><div class="progress-wrap"><div class="progress red" style="width:50%"></div></div><div class="percent">50%</div></div>
+          </div><div class="legend"><span><i></i> In progress</span><span><i style="background:#16a37b"></i> Completed</span><span><i style="background:#e99a2b"></i> Attention</span></div></div></div>
+          <div class="card"><div class="card-head"><div><h3>Needs attention</h3><p>Items that may need your action</p></div><span class="tag red">4 alerts</span></div><div class="card-body"><div class="alert-list">
+            <div class="alert"><div class="alert-icon si-orange">⚠</div><div><strong>Low fabric stock</strong><p>Premium Cotton • 120 meters left</p></div><span class="tag orange">Low stock</span></div>
+            <div class="alert"><div class="alert-icon si-red">◷</div><div><strong>Production delayed</strong><p>Order GF-26038 • Stitching</p></div><span class="tag red">Delayed</span></div>
+            <div class="alert"><div class="alert-icon si-purple">₨</div><div><strong>Customer payment due</strong><p>Al-Noor Traders • ₨ 185,000</p></div><span class="tag orange">Overdue</span></div>
+            <div class="alert"><div class="alert-icon si-green">♙</div><div><strong>Payroll approval</strong><p>Weekly wages • 23 workers</p></div><span class="tag purple">Pending</span></div>
+          </div></div></div>
+        </div>
+        <div class="card table-card"><div class="card-head"><div><h3>Recent production orders</h3><p>Latest activity from your factory floor</p></div><button class="btn small" onclick="go('production')">View all →</button></div><div class="table-wrap"><table><thead><tr><th>Order ID</th><th>Product</th><th>Qty</th><th>Due date</th><th>Current stage</th><th>Status</th></tr></thead><tbody>
+          <tr><td><strong>GF-26041</strong></td><td><div class="product-cell"><div class="product-thumb">👕</div><div><strong>Classic Polo Shirt</strong><div class="sku">POLO-001</div></div></div></td><td>10,000 pcs</td><td>18 Nov 2026</td><td>Pressing</td><td><span class="tag purple">In progress</span></td></tr>
+          <tr><td><strong>GF-26040</strong></td><td><div class="product-cell"><div class="product-thumb">👖</div><div><strong>Denim Jeans</strong><div class="sku">DNM-004</div></div></div></td><td>4,500 pcs</td><td>16 Nov 2026</td><td>Packing</td><td><span class="tag green">On track</span></td></tr>
+          <tr><td><strong>GF-26039</strong></td><td><div class="product-cell"><div class="product-thumb">🧥</div><div><strong>Zip Hoodie</strong><div class="sku">HD-012</div></div></div></td><td>2,000 pcs</td><td>20 Nov 2026</td><td>Stitching</td><td><span class="tag orange">Attention</span></td></tr>
+        </tbody></table></div><div class="table-foot"><span>Showing 3 of 24 orders</span><span>Updated just now</span></div></div>
+      </section>
+      <!-- PRODUCTION -->
+      <section class="page" id="production">
+        <div class="page-head"><div><div class="eyebrow">FACTORY OPERATIONS</div><h1>Production management</h1><p class="subtitle">Plan orders, track departments, and monitor output.</p></div><button class="btn primary" onclick="notify('New production order form would open here')">＋ Create production order</button></div>
+        <div class="section-banner"><div><h2>Factory floor overview</h2><p>Track work-in-progress from cutting to finished goods.</p></div><button class="btn" onclick="notify('Department board opened in demo')">Open department board →</button></div>
+        <div class="mini-stats"><div class="card mini-stat"><small>Active production orders</small><strong>24</strong></div><div class="card mini-stat"><small>Units in progress</small><strong>18,240 pcs</strong></div><div class="card mini-stat"><small>Average completion</small><strong>68.4%</strong></div></div>
+        <div class="card table-card"><div class="card-head"><h3>Production orders</h3><div class="table-tools"><input class="filter-input" placeholder="Search order…" oninput="filterTable(this)"/><select><option>All departments</option><option>Cutting</option><option>Stitching</option><option>Pressing</option><option>Packing</option></select></div></div><div class="table-wrap"><table><thead><tr><th>Order</th><th>Product</th><th>Planned</th><th>Cut</th><th>Stitched</th><th>Pressed</th><th>Packed</th><th>Due</th><th>Status</th></tr></thead><tbody>
+          <tr><td><strong>GF-26041</strong></td><td>Classic Polo Shirt</td><td>10,000</td><td>10,000</td><td>8,500</td><td>7,000</td><td>5,000</td><td>18 Nov</td><td><span class="tag purple">In progress</span></td></tr>
+          <tr><td><strong>GF-26040</strong></td><td>Denim Jeans</td><td>4,500</td><td>4,500</td><td>4,500</td><td>4,300</td><td>3,900</td><td>16 Nov</td><td><span class="tag green">On track</span></td></tr>
+          <tr><td><strong>GF-26039</strong></td><td>Zip Hoodie</td><td>2,000</td><td>2,000</td><td>1,200</td><td>—</td><td>—</td><td>20 Nov</td><td><span class="tag orange">Attention</span></td></tr>
+          <tr><td><strong>GF-26038</strong></td><td>Kids Sweatshirt</td><td>3,200</td><td>3,200</td><td>2,100</td><td>1,600</td><td>1,200</td><td>12 Nov</td><td><span class="tag red">Delayed</span></td></tr>
+        </tbody></table></div><div class="table-foot">Sample data • Production quantities are illustrative</div></div>
+        <div class="module-tiles">
+          <div class="card tile"><div class="tile-icon">✂</div><div><h3>Cutting</h3><p>Fabric issue, cutting plans, bundle tracking and wastage.</p><a href="#" onclick="notify('Cutting department preview');return false">Open department →</a></div></div>
+          <div class="card tile"><div class="tile-icon">🧵</div><div><h3>Stitching / Sewing</h3><p>Line allocation, worker output, defects and rework.</p><a href="#" onclick="notify('Stitching department preview');return false">Open department →</a></div></div>
+          <div class="card tile"><div class="tile-icon">♨</div><div><h3>Pressing & Finishing</h3><p>Pressing queue, thread trimming and finishing status.</p><a href="#" onclick="notify('Finishing department preview');return false">Open department →</a></div></div>
+          <div class="card tile"><div class="tile-icon">✓</div><div><h3>Quality Control</h3><p>Inspection checklist, defect reasons and approved pieces.</p><a href="#" onclick="notify('QC department preview');return false">Open department →</a></div></div>
+          <div class="card tile"><div class="tile-icon">▣</div><div><h3>Packing</h3><p>Size-wise packing, carton labels and packing lists.</p><a href="#" onclick="notify('Packing department preview');return false">Open department →</a></div></div>
+          <div class="card tile"><div class="tile-icon">⇢</div><div><h3>Finished Goods</h3><p>Receive completed goods and move them to warehouse.</p><a href="#" onclick="go('inventory');return false">Open inventory →</a></div></div>
+        </div>
+      </section>
+      <!-- INVENTORY -->
+      <section class="page" id="inventory">
+        <div class="page-head"><div><div class="eyebrow">STOCK CONTROL</div><h1>Inventory & warehouses</h1><p class="subtitle">Raw materials, accessories, WIP, and finished goods in one view.</p></div><button class="btn primary" onclick="notify('Stock adjustment form would open here')">＋ Stock adjustment</button></div>
+        <div class="stats"><div class="card stat"><div class="stat-top">Total SKUs <span class="stat-icon si-purple">▤</span></div><div class="stat-value">1,284</div><div class="trend"><span>Across 3 warehouses</span></div></div><div class="card stat"><div class="stat-top">Raw material <span class="stat-icon si-orange">◈</span></div><div class="stat-value">48,920 <small>m/kg</small></div><div class="trend"><span>Fabric & accessories</span></div></div><div class="card stat"><div class="stat-top">Finished goods <span class="stat-icon si-green">👕</span></div><div class="stat-value">24,680 <small>pcs</small></div><div class="trend"><span>Ready for dispatch</span></div></div><div class="card stat"><div class="stat-top">Low stock items <span class="stat-icon si-red">⚠</span></div><div class="stat-value">12</div><div class="trend" style="color:#e35d6a">Need replenishment</div></div></div>
+        <div class="card table-card"><div class="card-head"><h3>Stock overview</h3><div class="table-tools"><input class="filter-input" placeholder="Search item…" oninput="filterTable(this)"/><select><option>All categories</option><option>Fabric</option><option>Accessories</option><option>Finished goods</option></select></div></div><div class="table-wrap"><table><thead><tr><th>Item / SKU</th><th>Category</th><th>Warehouse</th><th>Available</th><th>Reserved</th><th>Reorder level</th><th>Status</th></tr></thead><tbody>
+          <tr><td><strong>Premium Cotton</strong><div class="sku">FAB-001</div></td><td>Fabric</td><td>Raw Material</td><td>120 m</td><td>80 m</td><td>500 m</td><td><span class="tag red">Low stock</span></td></tr>
+          <tr><td><strong>Polyester Thread</strong><div class="sku">ACC-024</div></td><td>Accessory</td><td>Raw Material</td><td>850 cones</td><td>120</td><td>300</td><td><span class="tag green">Healthy</span></td></tr>
+          <tr><td><strong>Classic Polo — Black M</strong><div class="sku">POLO-001-BK-M</div></td><td>Finished goods</td><td>FG Warehouse</td><td>1,240 pcs</td><td>400</td><td>200</td><td><span class="tag green">Healthy</span></td></tr>
+          <tr><td><strong>Denim Jeans — 32</strong><div class="sku">DNM-004-32</div></td><td>Finished goods</td><td>FG Warehouse</td><td>86 pcs</td><td>40</td><td>100</td><td><span class="tag orange">Reorder</span></td></tr>
+        </tbody></table></div><div class="table-foot">Stock figures are sample data • Unit of measure varies by item</div></div>
+      </section>
+      <!-- SALES -->
+      <section class="page" id="sales">
+        <div class="page-head"><div><div class="eyebrow">CUSTOMER COMMERCE</div><h1>Sales & orders</h1><p class="subtitle">Manage wholesale orders, invoices, deliveries, and customer balances.</p></div><button class="btn primary" onclick="notify('New sales order form would open here')">＋ New sales order</button></div>
+        <div class="stats"><div class="card stat"><div class="stat-top">Orders this month <span class="stat-icon si-purple">↗</span></div><div class="stat-value">186</div><div class="trend">↑ 14% <span>vs last month</span></div></div><div class="card stat"><div class="stat-top">Sales value <span class="stat-icon si-green">₨</span></div><div class="stat-value">₨ 18.6M</div><div class="trend">↑ 8.4% <span>vs last month</span></div></div><div class="card stat"><div class="stat-top">Receivables <span class="stat-icon si-orange">◷</span></div><div class="stat-value">₨ 3.2M</div><div class="trend" style="color:#e99a2b">42 invoices outstanding</div></div><div class="card stat"><div class="stat-top">Ready to dispatch <span class="stat-icon si-red">⇢</span></div><div class="stat-value">12</div><div class="trend"><span>Orders awaiting shipment</span></div></div></div>
+        <div class="card table-card"><div class="card-head"><h3>Recent sales orders</h3><input class="filter-input" placeholder="Search order…" oninput="filterTable(this)"/></div><div class="table-wrap"><table><thead><tr><th>Order</th><th>Customer</th><th>Order date</th><th>Amount</th><th>Payment</th><th>Delivery</th><th>Status</th></tr></thead><tbody>
+          <tr><td><strong>SO-10482</strong></td><td>Al-Noor Traders</td><td>14 Nov 2026</td><td>₨ 285,000</td><td><span class="tag orange">Partial</span></td><td>16 Nov</td><td><span class="tag purple">Processing</span></td></tr>
+          <tr><td><strong>SO-10481</strong></td><td>Fashion Hub</td><td>13 Nov 2026</td><td>₨ 142,500</td><td><span class="tag green">Paid</span></td><td>14 Nov</td><td><span class="tag green">Dispatched</span></td></tr>
+          <tr><td><strong>SO-10480</strong></td><td>City Garments</td><td>12 Nov 2026</td><td>₨ 96,000</td><td><span class="tag red">Due</span></td><td>18 Nov</td><td><span class="tag orange">Confirmed</span></td></tr>
+        </tbody></table></div><div class="table-foot">Sample sales data</div></div>
+      </section>
+      <!-- PURCHASES -->
+      <section class="page" id="purchases">
+        <div class="page-head"><div><div class="eyebrow">SUPPLIER & PROCUREMENT</div><h1>Purchases</h1><p class="subtitle">Purchase requests, supplier orders, receiving, and payable tracking.</p></div><button class="btn primary" onclick="notify('Purchase order form would open here')">＋ New purchase order</button></div>
+        <div class="mini-stats"><div class="card mini-stat"><small>Purchase this month</small><strong>₨ 7.4M</strong></div><div class="card mini-stat"><small>Open purchase orders</small><strong>18</strong></div><div class="card mini-stat"><small>Supplier payables</small><strong>₨ 2.1M</strong></div></div>
+        <div class="card table-card"><div class="card-head"><h3>Purchase orders</h3><input class="filter-input" placeholder="Search PO…" oninput="filterTable(this)"/></div><div class="table-wrap"><table><thead><tr><th>PO number</th><th>Supplier</th><th>Items</th><th>Amount</th><th>Expected</th><th>Received</th><th>Status</th></tr></thead><tbody>
+          <tr><td><strong>PO-00861</strong></td><td>Pak Fabric Mills</td><td>Premium Cotton</td><td>₨ 640,000</td><td>16 Nov</td><td>0%</td><td><span class="tag purple">Ordered</span></td></tr>
+          <tr><td><strong>PO-00860</strong></td><td>Thread & Trim Co.</td><td>Thread, buttons</td><td>₨ 85,500</td><td>14 Nov</td><td>100%</td><td><span class="tag green">Received</span></td></tr>
+          <tr><td><strong>PO-00859</strong></td><td>Denim Source</td><td>Denim fabric</td><td>₨ 420,000</td><td>12 Nov</td><td>60%</td><td><span class="tag orange">Partial</span></td></tr>
+        </tbody></table></div></div>
+      </section>
+      <!-- EMPLOYEES -->
+      <section class="page" id="employees">
+        <div class="page-head"><div><div class="eyebrow">WORKFORCE</div><h1>Employees & attendance</h1><p class="subtitle">Employee records, department assignments, shifts, and attendance.</p></div><button class="btn primary" onclick="notify('Employee registration form would open here')">＋ Add employee</button></div>
+        <div class="stats"><div class="card stat"><div class="stat-top">Total employees <span class="stat-icon si-purple">♙</span></div><div class="stat-value">248</div><div class="trend"><span>Across 6 departments</span></div></div><div class="card stat"><div class="stat-top">Present today <span class="stat-icon si-green">✓</span></div><div class="stat-value">226</div><div class="trend">91.1% <span>attendance</span></div></div><div class="card stat"><div class="stat-top">Absent <span class="stat-icon si-orange">◷</span></div><div class="stat-value">18</div><div class="trend"><span>4 on leave</span></div></div><div class="card stat"><div class="stat-top">Departments <span class="stat-icon si-red">▦</span></div><div class="stat-value">6</div><div class="trend"><span>Configured work areas</span></div></div></div>
+        <div class="card table-card"><div class="card-head"><h3>Employee directory</h3><div class="table-tools"><input class="filter-input" placeholder="Search employee…" oninput="filterTable(this)"/><select><option>All departments</option><option>Cutting</option><option>Stitching</option><option>Pressing</option><option>Packing</option></select></div></div><div class="table-wrap"><table><thead><tr><th>Employee</th><th>Employee ID</th><th>Department</th><th>Pay type</th><th>Rate</th><th>Attendance</th><th>Status</th></tr></thead><tbody>
+          <tr><td><strong>Ahmed Raza</strong></td><td>EMP-001</td><td>Cutting</td><td>Monthly</td><td>₨ 42,000</td><td>Present</td><td><span class="tag green">Active</span></td></tr>
+          <tr><td><strong>Bilal Khan</strong></td><td>EMP-024</td><td>Stitching</td><td>Piece rate</td><td>₨ 12 / piece</td><td>Present</td><td><span class="tag green">Active</span></td></tr>
+          <tr><td><strong>Usman Ali</strong></td><td>EMP-087</td><td>Pressing</td><td>Weekly</td><td>₨ 8,500</td><td>Present</td><td><span class="tag green">Active</span></td></tr>
+          <tr><td><strong>Imran Shah</strong></td><td>EMP-112</td><td>Packing</td><td>Daily</td><td>₨ 1,500 / day</td><td>Absent</td><td><span class="tag orange">Active</span></td></tr>
+        </tbody></table></div><div class="table-foot">Demo employees • Attendance is illustrative</div></div>
+      </section>
+      <!-- PAYROLL -->
+      <section class="page" id="payroll">
+        <div class="page-head"><div><div class="eyebrow">COMPENSATION</div><h1>Payroll & wages</h1><p class="subtitle">Weekly, monthly, daily, hourly, piece-rate, overtime, and advances.</p></div><button class="btn primary" onclick="notify('Payroll run setup would open here')">＋ Run payroll</button></div>
+        <div class="stats"><div class="card stat"><div class="stat-top">Current payroll <span class="stat-icon si-purple">₨</span></div><div class="stat-value">₨ 2.84M</div><div class="trend"><span>November payroll estimate</span></div></div><div class="card stat"><div class="stat-top">Paid <span class="stat-icon si-green">✓</span></div><div class="stat-value">₨ 2.41M</div><div class="trend">84.9% <span>completed</span></div></div><div class="card stat"><div class="stat-top">Pending <span class="stat-icon si-orange">◷</span></div><div class="stat-value">₨ 426K</div><div class="trend" style="color:#e99a2b">23 employees</div></div><div class="card stat"><div class="stat-top">Advances outstanding <span class="stat-icon si-red">↘</span></div><div class="stat-value">₨ 180K</div><div class="trend"><span>Recoverable advances</span></div></div></div>
+        <div class="card table-card"><div class="card-head"><h3>Payroll register</h3><div class="table-tools"><select><option>November 2026</option><option>October 2026</option></select><select><option>All pay types</option><option>Monthly</option><option>Weekly</option><option>Daily</option><option>Piece rate</option></select></div></div><div class="table-wrap"><table><thead><tr><th>Employee</th><th>Pay basis</th><th>Units / days</th><th>Gross</th><th>OT / bonus</th><th>Advance / deduction</th><th>Net payable</th><th>Status</th></tr></thead><tbody>
+          <tr><td><strong>Ahmed Raza</strong><div class="sku">EMP-001 • Cutting</div></td><td>Monthly</td><td>26 days</td><td>₨ 42,000</td><td>₨ 2,500</td><td>₨ 3,000</td><td><strong>₨ 41,500</strong></td><td><span class="tag green">Paid</span></td></tr>
+          <tr><td><strong>Bilal Khan</strong><div class="sku">EMP-024 • Stitching</div></td><td>Piece rate</td><td>620 pcs</td><td>₨ 7,440</td><td>₨ 1,000</td><td>₨ 500</td><td><strong>₨ 7,940</strong></td><td><span class="tag orange">Pending</span></td></tr>
+          <tr><td><strong>Usman Ali</strong><div class="sku">EMP-087 • Pressing</div></td><td>Weekly</td><td>6 days</td><td>₨ 8,500</td><td>₨ 750</td><td>₨ 1,000</td><td><strong>₨ 8,250</strong></td><td><span class="tag orange">Pending</span></td></tr>
+          <tr><td><strong>Imran Shah</strong><div class="sku">EMP-112 • Packing</div></td><td>Daily</td><td>5 days</td><td>₨ 7,500</td><td>₨ 0</td><td>₨ 0</td><td><strong>₨ 7,500</strong></td><td><span class="tag red">On hold</span></td></tr>
+        </tbody></table></div><div class="table-foot">Illustrative payroll only • Local payroll rules and policies must be configured</div></div>
+      </section>
+      <!-- ACCOUNTS -->
+      <section class="page" id="accounts">
+        <div class="page-head"><div><div class="eyebrow">FINANCE</div><h1>Accounts & cashflow</h1><p class="subtitle">Track cash, bank, expenses, receivables, and payables.</p></div><button class="btn primary" onclick="notify('New transaction form would open here')">＋ New transaction</button></div>
+        <div class="mini-stats"><div class="card mini-stat"><small>Cash in hand</small><strong>₨ 485,000</strong></div><div class="card mini-stat"><small>Bank balance</small><strong>₨ 2.84M</strong></div><div class="card mini-stat"><small>Net receivables</small><strong>₨ 3.20M</strong></div></div>
+        <div class="grid-main"><div class="card"><div class="card-head"><h3>Cash movement</h3><select><option>Last 7 days</option></select></div><div class="card-body"><div class="chart"><div class="bar-group"><div class="bar" style="height:42%"></div><span class="bar-label">Mon</span></div><div class="bar-group"><div class="bar" style="height:66%"></div><span class="bar-label">Tue</span></div><div class="bar-group"><div class="bar active" style="height:83%"></div><span class="bar-label">Wed</span></div><div class="bar-group"><div class="bar" style="height:55%"></div><span class="bar-label">Thu</span></div><div class="bar-group"><div class="bar" style="height:72%"></div><span class="bar-label">Fri</span></div><div class="bar-group"><div class="bar" style="height:35%"></div><span class="bar-label">Sat</span></div><div class="bar-group"><div class="bar" style="height:60%"></div><span class="bar-label">Sun</span></div></div></div></div><div class="card"><div class="card-head"><h3>Account quick links</h3></div><div class="card-body"><div class="alert-list"><div class="alert"><div class="alert-icon si-green">↗</div><div><strong>Customer receipts</strong><p>Record received payments</p></div></div><div class="alert"><div class="alert-icon si-orange">↘</div><div><strong>Supplier payments</strong><p>Manage payable settlements</p></div></div><div class="alert"><div class="alert-icon si-purple">▣</div><div><strong>Expense voucher</strong><p>Record factory expenses</p></div></div></div></div></div></div>
+      </section>
+      <!-- REPORTS -->
+      <section class="page" id="reports">
+        <div class="page-head"><div><div class="eyebrow">INSIGHTS & ANALYTICS</div><h1>Reports</h1><p class="subtitle">Operational and financial snapshots for business decisions.</p></div><button class="btn" onclick="notify('Report export is a demo action')">⇧ Export</button></div>
+        <div class="module-tiles">
+          <div class="card tile"><div class="tile-icon">⚙</div><div><h3>Production efficiency</h3><p>Output, target vs actual, department bottlenecks, rework.</p><a href="#" onclick="notify('Production report preview');return false">View report →</a></div></div>
+          <div class="card tile"><div class="tile-icon">▤</div><div><h3>Stock & valuation</h3><p>Raw material, WIP, finished stock and stock aging.</p><a href="#" onclick="notify('Inventory report preview');return false">View report →</a></div></div>
+          <div class="card tile"><div class="tile-icon">₨</div><div><h3>Costing & profitability</h3><p>Material, labour, overhead, product and order margin.</p><a href="#" onclick="notify('Costing report preview');return false">View report →</a></div></div>
+          <div class="card tile"><div class="tile-icon">♙</div><div><h3>Attendance & payroll</h3><p>Attendance, overtime, wages, advances and deductions.</p><a href="#" onclick="notify('Payroll report preview');return false">View report →</a></div></div>
+          <div class="card tile"><div class="tile-icon">↗</div><div><h3>Sales & customers</h3><p>Sales by customer, product, channel and outstanding.</p><a href="#" onclick="notify('Sales report preview');return false">View report →</a></div></div>
+          <div class="card tile"><div class="tile-icon">◫</div><div><h3>Cashflow & expenses</h3><p>Cash movement, expense categories and account balances.</p><a href="#" onclick="notify('Finance report preview');return false">View report →</a></div></div>
+        </div>
+      </section>
+      <!-- SETTINGS -->
+      <section class="page" id="settings">
+        <div class="page-head"><div><div class="eyebrow">CONFIGURATION</div><h1>Business settings</h1><p class="subtitle">Configure the demo business, departments, and operational preferences.</p></div><button class="btn primary" onclick="notify('Settings saved in this demo only')">Save changes</button></div>
+        <div class="module-tiles">
+          <div class="card tile"><div class="tile-icon">🏢</div><div><h3>Business profile</h3><p>Company name, logo, address, currency, and tax details.</p><a href="#" onclick="notify('Business profile settings');return false">Configure →</a></div></div>
+          <div class="card tile"><div class="tile-icon">▦</div><div><h3>Departments</h3><p>Cutting, stitching, pressing, QC, packing, warehouse.</p><a href="#" onclick="notify('Department settings');return false">Configure →</a></div></div>
+          <div class="card tile"><div class="tile-icon">♙</div><div><h3>Roles & permissions</h3><p>Owner, manager, supervisor, storekeeper, accounts, operator.</p><a href="#" onclick="notify('Role settings');return false">Configure →</a></div></div>
+          <div class="card tile"><div class="tile-icon">◷</div><div><h3>Shifts & attendance</h3><p>Shift timing, holidays, grace period, overtime rules.</p><a href="#" onclick="notify('Shift settings');return false">Configure →</a></div></div>
+          <div class="card tile"><div class="tile-icon">₨</div><div><h3>Payroll rules</h3><p>Weekly/monthly/daily/piece-rate pay, deductions, bonuses.</p><a href="#" onclick="notify('Payroll settings');return false">Configure →</a></div></div>
+          <div class="card tile"><div class="tile-icon">⚙</div><div><h3>Production workflow</h3><p>Stage sequence, quality gates, transfer and approval rules.</p><a href="#" onclick="notify('Workflow settings');return false">Configure →</a></div></div>
+        </div>
+      </section>
+      <div class="footer-note">GarmentFlow ERP • Static concept demo • All records and figures are fictional sample data</div>
+    </div>
+  </main>
+</div>
+
+<div class="modal-backdrop" id="modalBackdrop" onclick="if(event.target===this)closeModal()">
+ <div class="modal" role="dialog" aria-modal="true">
+  <div class="modal-head"><h2 id="modalTitle">New record</h2><button class="modal-close" onclick="closeModal()">×</button></div>
+  <form id="demoForm"><div class="modal-body"><div class="demo-label">Interactive demo • Changes are saved in this browser only (localStorage).</div><div class="form-grid" id="modalFields"></div></div>
+   <div class="modal-foot"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button type="submit" class="btn primary">Save record</button></div>
+  </form>
+ </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const names={dashboard:'Dashboard',production:'Production',inventory:'Inventory',sales:'Sales & Orders',purchases:'Purchases',employees:'Employees',payroll:'Payroll',accounts:'Accounts',reports:'Reports',settings:'Settings'};
+function go(page){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===page));document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.page===page));document.getElementById('crumb').textContent=names[page]||page;window.scrollTo({top:0,behavior:'smooth'});}
+document.querySelectorAll('.nav').forEach(n=>n.addEventListener('click',e=>{e.preventDefault();go(n.dataset.page)}));
+let toastTimer;
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.style.display='none',2800)}
+const formConfigs={
+ production:{title:'Create production order',page:'production',fields:[['order','Order ID','text','GF-26042'],['product','Product name','text','Classic Polo Shirt'],['qty','Planned quantity','number','2500'],['due','Due date','date','2026-11-20'],['stage','Current stage','select',['Cutting','Stitching','Pressing','Quality check','Packing']],['status','Status','select',['In progress','On track','Attention']]]},
+ employee:{title:'Add employee',page:'employees',fields:[['name','Employee name','text','New employee'],['id','Employee ID','text','EMP-249'],['department','Department','select',['Cutting','Stitching','Pressing','Quality Control','Packing','Warehouse','Accounts']],['pay','Pay type','select',['Monthly','Weekly','Daily','Hourly','Piece rate']],['rate','Rate / salary (PKR)','number','35000'],['attendance','Today attendance','select',['Present','Absent','Leave']]]},
+ sales:{title:'New sales order',page:'sales',fields:[['order','Order ID','text','SO-10483'],['customer','Customer','text','New customer'],['date','Order date','date','2026-11-14'],['amount','Amount (PKR)','number','125000'],['payment','Payment status','select',['Due','Partial','Paid']],['delivery','Delivery date','date','2026-11-20'],['status','Order status','select',['Confirmed','Processing','Dispatched']]]},
+ purchase:{title:'New purchase order',page:'purchases',fields:[['po','PO number','text','PO-00862'],['supplier','Supplier','text','New supplier'],['item','Item / material','text','Cotton fabric'],['amount','Amount (PKR)','number','250000'],['expected','Expected date','date','2026-11-20'],['received','Received %','number','0'],['status','Status','select',['Ordered','Partial','Received']]]},
+ stock:{title:'Stock adjustment',page:'inventory',fields:[['item','Item / SKU','text','FAB-001'],['category','Category','select',['Fabric','Accessory','Finished goods']],['warehouse','Warehouse','select',['Raw Material','Work in Progress','FG Warehouse']],['available','New available quantity','number','250'],['reserved','Reserved quantity','number','0'],['reorder','Reorder level','number','100'],['status','Stock status','select',['Healthy','Reorder','Low stock']]]},
+ transaction:{title:'New account transaction',page:'accounts',fields:[['type','Transaction type','select',['Customer receipt','Supplier payment','Expense','Other income']],['party','Party / account','text','Cash'],['amount','Amount (PKR)','number','10000'],['date','Date','date','2026-11-14'],['note','Description','text','Business transaction'] ]},
+ payroll:{title:'Run payroll',page:'payroll',fields:[['period','Payroll period','text','November 2026'],['paytype','Pay group','select',['All pay types','Monthly','Weekly','Daily','Piece rate']],['employees','Employees count','number','23'],['amount','Total amount (PKR)','number','426000'],['status','Run status','select',['Pending approval','Approved','Paid']]]}
+};
+let activeConfig=null;
+function notify(msg){
+ const m=String(msg).toLowerCase();
+ if(m.includes('new production order'))return openModal('production');
+ if(m.includes('employee registration')||m.includes('add employee'))return openModal('employee');
+ if(m.includes('new sales order'))return openModal('sales');
+ if(m.includes('purchase order form')||m.includes('new purchase'))return openModal('purchase');
+ if(m.includes('stock adjustment'))return openModal('stock');
+ if(m.includes('new transaction'))return openModal('transaction');
+ if(m.includes('payroll run')||m.includes('run payroll'))return openModal('payroll');
+ if(m.includes('export'))return exportCurrentTable();
+ if(m.includes('department preview')||m.includes('department board')){toast(msg+' (demo view)');return}
+ toast(msg);
+}
+function openModal(key){activeConfig=formConfigs[key];document.getElementById('modalTitle').textContent=activeConfig.title;const holder=document.getElementById('modalFields');holder.innerHTML='';
+ activeConfig.fields.forEach(f=>{const [name,label,type,def]=f;const wrap=document.createElement('div');wrap.className='field'+(name==='note'?' full':'');const lab=document.createElement('label');lab.textContent=label;lab.htmlFor='f_'+name;wrap.appendChild(lab);let el;
+ if(type==='select'){el=document.createElement('select');def.forEach(v=>{const o=document.createElement('option');o.textContent=v;o.value=v;el.appendChild(o)})}
+ else{el=document.createElement(type==='number'?'input':'input');el.type=type;el.value=def;if(type==='number')el.min='0'}
+ el.id='f_'+name;el.name=name;wrap.appendChild(el);holder.appendChild(wrap)});
+ document.getElementById('modalBackdrop').classList.add('open');setTimeout(()=>holder.querySelector('input,select')?.focus(),50)}
+function closeModal(){document.getElementById('modalBackdrop').classList.remove('open')}
+function saveDemo(key,record){let all=JSON.parse(localStorage.getItem('garmentflow_'+key)||'[]');all.unshift(record);localStorage.setItem('garmentflow_'+key,JSON.stringify(all));}
+document.getElementById('demoForm').addEventListener('submit',e=>{e.preventDefault();if(!activeConfig)return;const data=Object.fromEntries(new FormData(e.target).entries());saveDemo(activeConfig.page,data);addDemoRow(activeConfig.page,data);closeModal();toast('Record saved successfully • Demo data stored locally')});
+function addDemoRow(page,d){
+ const section=document.getElementById(page);if(!section)return;const table=section.querySelector('tbody');if(!table)return;const tr=document.createElement('tr');
+ let vals=[];
+ if(page==='production')vals=[d.order,d.product,d.qty,d.qty,'—','—','—',d.due,d.status];
+ else if(page==='employees')vals=[d.name,d.id,d.department,d.pay,'₨ '+Number(d.rate||0).toLocaleString(),d.attendance,'Active'];
+ else if(page==='sales')vals=[d.order,d.customer,d.date,'₨ '+Number(d.amount||0).toLocaleString(),d.payment,d.delivery,d.status];
+ else if(page==='purchases')vals=[d.po,d.supplier,d.item,'₨ '+Number(d.amount||0).toLocaleString(),d.expected,(d.received||0)+'%',d.status];
+ else if(page==='inventory')vals=[d.item,d.category,d.warehouse,d.available,d.reserved,d.reorder,d.status];
+ else if(page==='payroll')vals=[d.period,d.paytype,d.employees+' employees','₨ '+Number(d.amount||0).toLocaleString(),'—','—','₨ '+Number(d.amount||0).toLocaleString(),d.status];
+ else if(page==='accounts')vals=[d.date,d.type,d.party,'₨ '+Number(d.amount||0).toLocaleString(),d.note||'—'];
+ vals.forEach((v,i)=>{const td=document.createElement('td');td.textContent=v; if(i===0){const b=document.createElement('strong');b.textContent=v;td.textContent='';td.appendChild(b)}tr.appendChild(td)});
+ table.prepend(tr);toast('Added to '+names[page]+' table');
+}
+function exportCurrentTable(){const page=document.querySelector('.page.active');const table=page?.querySelector('table');if(!table){toast('No table available to export on this page');return}const rows=[...table.querySelectorAll('tr')].map(r=>[...r.querySelectorAll('th,td')].map(c=>'"'+c.innerText.replace(/"/g,'""')+'"').join(',')).join('\\n');const blob=new Blob([rows],{type:'text/csv;charset=utf-8;'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=(page.id||'report')+'.csv';a.click();URL.revokeObjectURL(a.href);toast('CSV exported')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+// Restore demo-created records after refresh
+Object.keys(formConfigs).forEach(key=>{const page=formConfigs[key].page;const saved=JSON.parse(localStorage.getItem('garmentflow_'+page)||'[]');const tbody=document.getElementById(page)?.querySelector('tbody');if(tbody&&saved.length){saved.reverse().forEach(d=>addDemoRowSilent(page,d))}});
+function addDemoRowSilent(page,d){const table=document.getElementById(page)?.querySelector('tbody');if(!table)return;const tr=document.createElement('tr');let vals=[];
+ if(page==='production')vals=[d.order,d.product,d.qty,d.qty,'—','—','—',d.due,d.status];
+ else if(page==='employees')vals=[d.name,d.id,d.department,d.pay,'₨ '+Number(d.rate||0).toLocaleString(),d.attendance,'Active'];
+ else if(page==='sales')vals=[d.order,d.customer,d.date,'₨ '+Number(d.amount||0).toLocaleString(),d.payment,d.delivery,d.status];
+ else if(page==='purchases')vals=[d.po,d.supplier,d.item,'₨ '+Number(d.amount||0).toLocaleString(),d.expected,(d.received||0)+'%',d.status];
+ else if(page==='inventory')vals=[d.item,d.category,d.warehouse,d.available,d.reserved,d.reorder,d.status];
+ else if(page==='payroll')vals=[d.period,d.paytype,d.employees+' employees','₨ '+Number(d.amount||0).toLocaleString(),'—','—','₨ '+Number(d.amount||0).toLocaleString(),d.status];
+ else if(page==='accounts')vals=[d.date,d.type,d.party,'₨ '+Number(d.amount||0).toLocaleString(),d.note||'—'];
+ vals.forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.appendChild(td)});table.prepend(tr)}
+
+function filterTable(input){const table=input.closest('.card').querySelector('tbody');if(!table)return;const q=input.value.toLowerCase();table.querySelectorAll('tr').forEach(r=>r.style.display=r.innerText.toLowerCase().includes(q)?'':'none')}
+document.getElementById('globalSearch').addEventListener('input',e=>{const q=e.target.value.toLowerCase();document.querySelectorAll('.page.active tbody tr').forEach(r=>r.style.display=r.innerText.toLowerCase().includes(q)?'':'none')});
+</script>
+</body>
+</html>
