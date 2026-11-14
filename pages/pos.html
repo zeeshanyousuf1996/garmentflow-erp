@@ -1,0 +1,106 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GarmentFlow ERP</title><link rel="stylesheet" href="../assets/style.css"></head><body><aside class="sidebar" id="sidebar"><div class="brand">Garment<span>Flow</span> ERP</div></aside><main class="main"><header class="top"><b id="title">GarmentFlow ERP</b><span>Contoso Garments · Karachi　 |　 Demo Admin</span></header><div class="content"><div class="head"><div><h1>POS Counter</h1><div class="muted">Retail checkout · scan or search products · manage cart · collect payment</div></div><button class="btn btn2" onclick="showReceipts()">▤ Recent receipts</button></div>
+<div class="pos-controls"><input id="posSearch" placeholder="Search product / SKU..." oninput="renderProducts()"><select id="posCategory" onchange="renderProducts()"><option>All categories</option><option>Polo Shirts</option><option>T-Shirts</option><option>Trousers</option><option>Denim</option><option>Kids Wear</option><option>Eastern Wear</option><option>Women Wear</option><option>Sweatshirts</option><option>Accessories</option></select><select id="customer" aria-label="Select customer"><option>Walk-in Customer</option><option>Al Noor Garments</option><option>Style Avenue</option><option>Kids Planet</option><option>Denim House</option><option>Prime Clothing</option><option>Fashion Hub</option></select></div>
+<section class="category-section"><h2>Shop by category</h2><p class="cat-sub">Browse garment collections</p><div class="pos-category-strip">
+<button class="category-card active" data-cat="All categories" onclick="pickCategory('All categories')"><span class="cat-art">✦</span><b>All Products</b><small>46 products</small></button>
+<button class="category-card" data-cat="Polo Shirts" onclick="pickCategory('Polo Shirts')"><span class="cat-art">👕</span><b>Polo Shirts</b><small>4 variants</small></button>
+<button class="category-card" data-cat="T-Shirts" onclick="pickCategory('T-Shirts')"><span class="cat-art">👕</span><b>T-Shirts</b><small>2 variants</small></button>
+<button class="category-card" data-cat="Trousers" onclick="pickCategory('Trousers')"><span class="cat-art">👖</span><b>Trousers</b><small>2 variants</small></button>
+<button class="category-card" data-cat="Denim" onclick="pickCategory('Denim')"><span class="cat-art">👖</span><b>Denim</b><small>2 variants</small></button>
+<button class="category-card" data-cat="Kids Wear" onclick="pickCategory('Kids Wear')"><span class="cat-art">🧸</span><b>Kids Wear</b><small>2 variants</small></button>
+<button class="category-card" data-cat="Eastern Wear" onclick="pickCategory('Eastern Wear')"><span class="cat-art">🥻</span><b>Eastern Wear</b><small>2 variants</small></button>
+<button class="category-card" data-cat="Women Wear" onclick="pickCategory('Women Wear')"><span class="cat-art">👗</span><b>Women Wear</b><small>1 variant</small></button>
+<button class="category-card" data-cat="Sweatshirts" onclick="pickCategory('Sweatshirts')"><span class="cat-art">🧥</span><b>Sweatshirts</b><small>1 variant</small></button>
+</div></section><div class="products-caption"><h2>Products</h2><div class="view-tools"><span id="productCount">16 products</span><button class="view-btn active" id="gridViewBtn" onclick="setProductView('grid')">▦ Grid</button><button class="view-btn" id="listViewBtn" onclick="setProductView('list')">☰ List</button></div></div>
+<div class="pos-layout"><div><div id="productGrid" class="pos-products"></div></div><aside class="cart-panel"><div class="cart-head"><strong>Current sale</strong><button class="btn btn2" onclick="clearCart()">Clear</button></div><div id="cartLines" class="cart-lines"></div><div class="cart-summary"><div class="sumrow"><span>Subtotal</span><b id="subtotal">PKR 0</b></div><div class="sumrow"><span>Discount</span><input id="discount" type="number" min="0" value="0" style="width:90px;padding:5px" oninput="renderCart()"></div><div class="sumrow"><span>Tax (0%)</span><b>PKR 0</b></div><div class="sumrow grand"><span>Total</span><b id="total">PKR 0</b></div><div style="margin-top:12px"><label>Payment method</label><select id="payment" style="width:100%;padding:10px;margin-top:5px"><option>Cash</option><option>Card</option><option>Bank Transfer</option><option>JazzCash / Easypaisa</option></select></div><button class="btn" style="width:100%;margin-top:12px" onclick="checkout()">✓ Complete Sale</button></div></aside></div><div id="receiptArea" class="panel" style="display:none;margin-top:18px"></div></div></div></main><div class="modal" id="modal"><div class="modalbox"><h2>Add / Edit Record</h2><form id="form"><div class="fields" id="formfields"></div><div class="modalfoot"><button type="button" class="btn btn2" onclick="closeForm()">Cancel</button> <button class="btn">Save Record</button></div></form></div></div><div class="toast" id="toast"></div><script>window.PAGE="POS"</script><script src="../assets/data.js"></script><script src="../assets/app.js"></script><script>
+const catalog=[
+{sku:'GF-POLO-NV-S',name:'Classic Polo Shirt · Navy · S',style:'GF-POLO',category:'Polo Shirts',price:1590,stock:85},
+{sku:'GF-POLO-NV-M',name:'Classic Polo Shirt · Navy · M',style:'GF-POLO',category:'Polo Shirts',price:1590,stock:120},
+{sku:'GF-POLO-NV-L',name:'Classic Polo Shirt · Navy · L',style:'GF-POLO',category:'Polo Shirts',price:1590,stock:96},
+{sku:'GF-POLO-WH-M',name:'Classic Polo Shirt · White · M',style:'GF-POLO',category:'Polo Shirts',price:1590,stock:62},
+{sku:'GF-TEE-BK-M',name:'Crew Neck T-Shirt · Black · M',style:'GF-TEE',category:'T-Shirts',price:890,stock:140},
+{sku:'GF-TEE-WH-L',name:'Crew Neck T-Shirt · White · L',style:'GF-TEE',category:'T-Shirts',price:890,stock:115},
+{sku:'GF-HOOD-GR-8Y',name:'Kids Hoodie · Grey · 8Y',style:'GF-HOOD',category:'Kids Wear',price:2190,stock:44},
+{sku:'GF-HOOD-BK-10Y',name:'Kids Hoodie · Black · 10Y',style:'GF-HOOD',category:'Kids Wear',price:2190,stock:38},
+{sku:'GF-CARGO-OL-32',name:'Cargo Trouser · Olive · 32',style:'GF-CARGO',category:'Trousers',price:2850,stock:52},
+{sku:'GF-CARGO-OL-34',name:'Cargo Trouser · Olive · 34',style:'GF-CARGO',category:'Trousers',price:2850,stock:48},
+{sku:'GF-DENIM-BL-32',name:'Straight Fit Denim · Blue · 32',style:'GF-DENIM',category:'Denim',price:3490,stock:35},
+{sku:'GF-DENIM-BL-34',name:'Straight Fit Denim · Blue · 34',style:'GF-DENIM',category:'Denim',price:3490,stock:29},
+{sku:'GF-KURTA-WH-M',name:'Cotton Kurta · White · M',style:'GF-KURTA',category:'Eastern Wear',price:2490,stock:41},
+{sku:'GF-KURTA-BK-L',name:'Cotton Kurta · Black · L',style:'GF-KURTA',category:'Eastern Wear',price:2490,stock:33},
+{sku:'GF-LEGG-BK-M',name:'Cotton Leggings · Black · M',style:'GF-LEGG',category:'Women Wear',price:1190,stock:67},
+{sku:'GF-SWEAT-GR-L',name:'Oversized Sweatshirt · Grey · L',style:'GF-SWEAT',category:'Sweatshirts',price:2290,stock:26}
+,
+{sku:'GF-POLO-RD-M',name:'Classic Polo Shirt · Red · M',style:'GF-POLO',category:'Polo Shirts',price:1590,stock:73},
+{sku:'GF-POLO-BK-S',name:'Classic Polo Shirt · Black · S',style:'GF-POLO',category:'Polo Shirts',price:1590,stock:55},
+{sku:'GF-POLO-WH-L',name:'Classic Polo Shirt · White · L',style:'GF-POLO',category:'Polo Shirts',price:1590,stock:49},
+{sku:'GF-TEE-NV-S',name:'Crew Neck T-Shirt · Navy · S',style:'GF-TEE',category:'T-Shirts',price:890,stock:160},
+{sku:'GF-TEE-GR-M',name:'Crew Neck T-Shirt · Grey · M',style:'GF-TEE',category:'T-Shirts',price:890,stock:98},
+{sku:'GF-TEE-RD-L',name:'Crew Neck T-Shirt · Red · L',style:'GF-TEE',category:'T-Shirts',price:990,stock:72},
+{sku:'GF-TEE-BK-L',name:'Crew Neck T-Shirt · Black · L',style:'GF-TEE',category:'T-Shirts',price:890,stock:125},
+{sku:'GF-CARGO-BK-30',name:'Cargo Trouser · Black · 30',style:'GF-CARGO',category:'Trousers',price:2850,stock:42},
+{sku:'GF-CARGO-OL-36',name:'Cargo Trouser · Olive · 36',style:'GF-CARGO',category:'Trousers',price:2850,stock:36},
+{sku:'GF-CARGO-BK-34',name:'Cargo Trouser · Black · 34',style:'GF-CARGO',category:'Trousers',price:2850,stock:31},
+{sku:'GF-DENIM-BL-30',name:'Straight Fit Denim · Blue · 30',style:'GF-DENIM',category:'Denim',price:3490,stock:28},
+{sku:'GF-DENIM-BK-32',name:'Straight Fit Denim · Black · 32',style:'GF-DENIM',category:'Denim',price:3690,stock:25},
+{sku:'GF-DENIM-BL-36',name:'Straight Fit Denim · Blue · 36',style:'GF-DENIM',category:'Denim',price:3490,stock:21},
+{sku:'GF-HOOD-NV-8Y',name:'Kids Hoodie · Navy · 8Y',style:'GF-HOOD',category:'Kids Wear',price:2190,stock:34},
+{sku:'GF-HOOD-GR-12Y',name:'Kids Hoodie · Grey · 12Y',style:'GF-HOOD',category:'Kids Wear',price:2290,stock:29},
+{sku:'GF-HOOD-BK-12Y',name:'Kids Hoodie · Black · 12Y',style:'GF-HOOD',category:'Kids Wear',price:2190,stock:20},
+{sku:'GF-KURTA-BL-M',name:'Cotton Kurta · Blue · M',style:'GF-KURTA',category:'Eastern Wear',price:2490,stock:37},
+{sku:'GF-KURTA-WH-L',name:'Cotton Kurta · White · L',style:'GF-KURTA',category:'Eastern Wear',price:2490,stock:28},
+{sku:'GF-KURTA-GR-L',name:'Cotton Kurta · Grey · L',style:'GF-KURTA',category:'Eastern Wear',price:2590,stock:24},
+{sku:'GF-LEGG-BK-L',name:'Cotton Leggings · Black · L',style:'GF-LEGG',category:'Women Wear',price:1190,stock:53},
+{sku:'GF-LEGG-NV-M',name:'Cotton Leggings · Navy · M',style:'GF-LEGG',category:'Women Wear',price:1290,stock:41},
+{sku:'GF-SWEAT-BK-M',name:'Oversized Sweatshirt · Black · M',style:'GF-SWEAT',category:'Sweatshirts',price:2290,stock:22},
+{sku:'GF-SWEAT-NV-L',name:'Oversized Sweatshirt · Navy · L',style:'GF-SWEAT',category:'Sweatshirts',price:2390,stock:18},
+{sku:'GF-JOG-GR-M',name:'Jogger Pants · Grey · M',style:'GF-JOG',category:'Trousers',price:1990,stock:44},
+{sku:'GF-SOCK-WH-3P',name:'Cotton Socks · White · 3 Pack',style:'GF-SOCK',category:'Accessories',price:490,stock:180},
+{sku:'GF-CAP-BK-OS',name:'Cotton Cap · Black · One Size',style:'GF-CAP',category:'Accessories',price:690,stock:65},
+{sku:'GF-BELT-BK-32',name:'Casual Belt · Black · 32',style:'GF-BELT',category:'Accessories',price:990,stock:33},
+{sku:'GF-SCARF-NV',name:'Cotton Scarf · Navy',style:'GF-SCARF',category:'Accessories',price:790,stock:40},
+{sku:'GF-POLO-GR-M',name:'Classic Polo Shirt · Green · M',style:'GF-POLO',category:'Polo Shirts',price:1590,stock:46},
+{sku:'GF-TEE-WH-M',name:'Crew Neck T-Shirt · White · M',style:'GF-TEE',category:'T-Shirts',price:890,stock:92}
+];
+let cart=[];
+const money=n=>'PKR '+Number(n).toLocaleString('en-PK');
+function pickCategory(cat){document.getElementById('posCategory').value=cat;document.querySelectorAll('.category-card').forEach(b=>b.classList.toggle('active',b.dataset.cat===cat));renderProducts()}
+let productView='grid';function setProductView(v){productView=v;document.getElementById('productGrid').classList.toggle('list-view',v==='list');document.getElementById('gridViewBtn').classList.toggle('active',v==='grid');document.getElementById('listViewBtn').classList.toggle('active',v==='list')}
+function productIcon(cat){return {'Polo Shirts':'👕','T-Shirts':'👕','Trousers':'👖','Denim':'👖','Kids Wear':'🧸','Eastern Wear':'🥻','Women Wear':'👗','Sweatshirts':'🧥','Accessories':'🧢'}[cat]||'🛍️'}
+function renderProducts(){
+ const q=(document.getElementById('posSearch').value||'').toLowerCase();
+ const cat=document.getElementById('posCategory').value;
+ const list=catalog.filter(p=>(cat==='All categories'||p.category===cat)&&(p.name.toLowerCase().includes(q)||p.sku.toLowerCase().includes(q)));
+ document.getElementById('productCount').textContent=list.length+' products';document.querySelectorAll('.category-card').forEach(b=>{let c=b.dataset.cat;if(c==='All categories')b.querySelector('small').textContent=catalog.length+' products';else b.querySelector('small').textContent=catalog.filter(x=>x.category===c).length+' products';});
+ const grid=document.getElementById('productGrid');
+ grid.innerHTML='';
+ if(!list.length){grid.innerHTML='<div class="empty-products">No products match your search.</div>';return}
+ if(productView==='list'){
+   const cats=[...new Set(list.map(x=>x.category))];
+   grid.className='pos-products list-view';
+   grid.innerHTML=cats.map(c=>'<section class="product-category-group"><div class="category-group-title">'+productIcon(c)+' '+c+'</div><table class="pos-product-table"><thead><tr><th>SKU</th><th>Product / Variant</th><th>Stock</th><th>Price</th><th></th></tr></thead><tbody>'+list.filter(x=>x.category===c).map(x=>'<tr><td>'+x.sku+'</td><td>'+x.name+'</td><td>'+x.stock+'</td><td>'+money(x.price)+'</td><td><button class="btn add-row-btn" onclick="addCart(\''+x.sku+'\')">＋ Add</button></td></tr>').join('')+'</tbody></table></section>').join('');
+   return;
+ }
+ grid.className='pos-products';
+ list.forEach(p=>{
+  const tile=document.createElement('button');tile.className='product-tile';tile.type='button';tile.onclick=()=>addCart(p.sku);
+  tile.innerHTML='<div class="product-visual"><span>'+productIcon(p.category)+'</span><small>GARMENT COLLECTION</small></div><div class="sku">'+p.sku+' · Stock '+p.stock+'</div><strong>'+p.name+'</strong><span class="price">'+money(p.price)+'</span>';
+  grid.appendChild(tile);
+ });
+}
+function addCart(sku){let p=catalog.find(x=>x.sku===sku),item=cart.find(x=>x.sku===sku);if(item)item.qty++;else cart.push({...p,qty:1});renderCart()}
+function changeQty(sku,n){let i=cart.find(x=>x.sku===sku);if(i){i.qty+=n;if(i.qty<=0)cart=cart.filter(x=>x.sku!==sku)}renderCart()}
+function clearCart(){cart=[];renderCart()}
+function renderCart(){document.getElementById('cartLines').innerHTML=cart.map(x=>`<div class="cart-item"><div><b>${x.name}</b><small>${money(x.price)} × ${x.qty}</small></div><div class="qty"><button onclick="changeQty('${x.sku}',-1)">−</button>${x.qty}<button onclick="changeQty('${x.sku}',1)">+</button></div>`).join('')||'<div style="color:#777;text-align:center;padding:35px 0">Cart is empty. Select products to begin.</div>';let sub=cart.reduce((s,x)=>s+x.price*x.qty,0),disc=Math.max(0,Number(document.getElementById('discount').value)||0);document.getElementById('subtotal').textContent=money(sub);document.getElementById('total').textContent=money(Math.max(0,sub-disc))}
+function checkout(){if(!cart.length){alert('Add at least one item to cart.');return}let total=cart.reduce((s,x)=>s+x.price*x.qty,0)-Math.max(0,Number(document.getElementById('discount').value)||0),records=JSON.parse(localStorage.getItem('gf-customer-demo')||'{}');records.POS=records.POS||[];let receipt='RCP-'+(9003+records.POS.length);records.POS.unshift([receipt,document.getElementById('customer').value,'Demo Cashier',cart.map(x=>x.name+' × '+x.qty).join('; '),money(total),document.getElementById('payment').value]);localStorage.setItem('gf-customer-demo',JSON.stringify(records));document.getElementById('receiptArea').style.display='block';document.getElementById('receiptArea').innerHTML='<h3>✓ Sale completed · '+receipt+'</h3><p>'+cart.map(x=>x.name+' × '+x.qty).join('<br>')+'</p><h2>'+money(total)+'</h2><button class="btn btn2" onclick="window.print()">Print receipt</button>';cart=[];document.getElementById('discount').value=0;renderCart();alert('Sale completed successfully: '+receipt)}
+function showReceipts(){let d=JSON.parse(localStorage.getItem('gf-customer-demo')||'{}');alert((d.POS||[]).map(r=>r.join(' | ')).join('\n')||'No receipts')}
+// Reliable POS product renderer override (customer demo)
+function renderProducts(){
+ const q=(document.getElementById('posSearch')?.value||'').toLowerCase();
+ const cat=document.getElementById('posCategory')?.value||'All categories';
+ const list=catalog.filter(p=>(cat==='All categories'||p.category===cat)&&(p.name.toLowerCase().includes(q)||p.sku.toLowerCase().includes(q)));
+ const count=document.getElementById('productCount'); if(count) count.textContent=list.length+' products';
+ const grid=document.getElementById('productGrid'); if(!grid)return;
+ grid.innerHTML=list.map(p=>`<button type="button" class="product-tile" onclick="addCart('${p.sku}')"><div class="product-visual"><span>${productIcon(p.category)}</span><small>GARMENT COLLECTION</small></div><div class="sku">${p.sku} · Stock ${p.stock}</div><strong>${p.name}</strong><span class="price">${money(p.price)}</span><span class="btn" style="margin-top:8px;padding:7px 10px">＋ Add to sale</span></button>`).join('');
+}
+renderProducts();renderCart();window.addEventListener('load',()=>{try{renderProducts();renderCart();}catch(e){console.error('POS render error',e)}});
+</script></body></html>
